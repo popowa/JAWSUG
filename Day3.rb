@@ -11,7 +11,8 @@ ec2.vpcs.each {|vpc|
    if vpc.cidr_block == $vpc_cidr_block
        # attach GW to VPC
         igw = AWS::EC2::InternetGateway.new(gw.internet_gateway_id)
-        igw.vpc = vpc.id 
+        igw.vpc = vpc.id
+        break
    end
 }
 
