@@ -1,0 +1,40 @@
+<html>
+  <head>
+    <script type="text/javascript" src="./jquery-1.11.0.min.js"></script>
+    <script type="text/javascript" src="./pricing-map.js"></script>
+    <script type="text/javascript" src="https://www.google.com/jsapi"></script>
+    <script type="text/javascript">
+      list = [];
+      obj = null;
+      
+      function callback(json_data) {
+        obj = eval(json_data);
+        list = toOndemandList(obj);
+       }
+      $(function(){
+          var dataArray = getRegions(obj);
+          //alert(dataArray);
+          xyOptions();
+
+      })
+         google.load("visualization", "1", {packages:["corechart"]});
+         google.setOnLoadCallback(drawChart);
+
+    </script>
+        <script type='text/javascript' src='http://a0.awsstatic.com/pricing/1/ec2/linux-od.min.js?callback=callback'></script>
+
+  </head>
+  <body>
+    <p></p>
+    <h1>ほげほげ</h1>
+    <div id="xy">
+      X: <select id="xOption" name="xOption"></select>
+      Y: <select id="yOption" name="yOption"></select>
+
+    </div>
+
+    <div id="chart_div" style="width: 5000px; height: 4500px;"></div>
+  </body>
+</html>
+
+<input type="radio" name="q1" value="はい"> はい
