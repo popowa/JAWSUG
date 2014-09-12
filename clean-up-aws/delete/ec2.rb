@@ -1,0 +1,46 @@
+# -*- encoding: utf-8 -*-
+require  File.expand_path('./config.rb', File.dirname(__FILE__))
+
+ec2 = AWS::EC2::new
+
+#delete EIP
+ec2.elastic_ips.each do |eip|
+  if eip.associated?
+    puts "Diassociate from #{eip.instance_id}"
+    eip.disassociate
+  end
+  eip.delete
+  puts "Release: #{eip}"
+end
+
+#delete AMIs
+
+ec2.images.with_owner("self").each do |image|
+  if image.exists?
+    puts "Deregister: #{image.image_id}/#{image.description}"
+    image.deregister
+  end
+end
+
+
+#Terminate instances
+
+ec2.instances.each do |instance|
+  if instance.exists?
+    puts "Terminate: #{instance.id}"
+    instance.terminate
+  end
+end
+
+
+
+#Delete Keypair
+
+ec2.key_pairs.each do |keypair|
+  if keypair.exists?
+    puts "Delete: #{keypair.name}/fingerprint:#{keypair.fingerprint}"
+    keypair.delete
+  end
+end
+
+
