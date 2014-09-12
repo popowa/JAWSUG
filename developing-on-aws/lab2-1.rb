@@ -1,5 +1,6 @@
 # -*- encoding: utf-8 -*-
 require  File.expand_path('./config.rb', File.dirname(__FILE__))
+require 'date'
 
 s3 = AWS::S3.new
 #check bucket name
@@ -21,8 +22,14 @@ if ARGV[0] == nil then
   puts "Please enter file to be uploaded!"
 else
   file_path = ARGV[0]
+  start_time = DateTime.now
+  puts "start: #{start_time}"
+
   obj = bucket.objects[file_path]
   obj.write(Pathname.new(file_path))
-  puts "Upload: #{obj.key}"
+  finish_time = DateTime.now
+  puts "Uploaded: #{finish_time}"
+  diff_time = ((start_time - finish_time) * 24 * 60 * 60).to_i
+  puts "Upload time: #{diff_time} sec"
 end
 
