@@ -10,7 +10,7 @@ end
 
 seperator("RDS")
 rds.db_instances.each do  | instance |
-  if instance.exists?
+  if instance.exists? and instance.db_instance_status != "deleting"
     puts "Delete RDS: #{instance.db_instance_identifier}"
     instance.delete(:skip_final_snapshot => true)
   end
@@ -23,16 +23,16 @@ rds.db_snapshots.each do | snapshot |
     snapshot.delete
   end
 end
-=begin
+
+#RDSが削除された事を確認すればParameterが消せる
 
 seperator("RDS paramter")
 rds.client.describe_db_parameter_groups.db_parameter_groups.each do | pg |
-  if !pg.db_parameter_group_name.include?("default")
+  #if !pg.db_parameter_group_name.include?("default.")
     puts "Delete RDS Parameter Group: #{pg.db_parameter_group_name}"
     rds.client.delete_db_parameter_group(:db_parameter_group_name => pg.db_parameter_group_name)
-  end
+  #end
 end
-
 
 seperator("RDS Option Group")
 rds.client.describe_option_groups.option_groups_list.each do | op |
@@ -41,6 +41,7 @@ rds.client.describe_option_groups.option_groups_list.each do | op |
     rds.client.delete_option_group(:option_group_name => op.option_group_name)
   end
 end
+=begin
 
 
 seperator("RDS Security Group")

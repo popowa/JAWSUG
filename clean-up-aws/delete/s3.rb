@@ -7,13 +7,23 @@ s3 = AWS::S3.new
 
 buckets = s3.buckets
 
+#versioning とMFA無効の機能がない
+
+
 buckets.each do |bucket|
-  if !bucket.name.include?("elasticbeanstalk")
-    puts "delete object from:#{bucket.name}"
-      bucket.objects.each do |obj|
-        puts obj.key
-      end
-    bucket.clear!
-    bucket.delete
+  puts "object from:#{bucket.name}"
+  if bucket.acl
+    bucket.acl = :bucket_owner_full_control
   end
+  if bucket.policy
+    bucket.policy.delete
+  end
+  if bucket.website?
+     bucket.remove_website_configuration
+  end
+  if bucket.cors.count
+    bucket.cors.clear
+  end
+  bucket.clear!
+  bucket.delete()
 end
