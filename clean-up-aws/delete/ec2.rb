@@ -56,8 +56,8 @@ end
 # delete ec2 security group。
 # VPCのSGは後で削除する
 ec2.security_groups.each do | sg |
-   if sg.name != "default" and !sg.vpc
-      puts "Delete Security Group: #{sg.id}"
-      sg.delete
+   if sg.name != "default"
+     puts "Delete Security Group: #{sg.id}"
+     sg.delete
    end
 end
